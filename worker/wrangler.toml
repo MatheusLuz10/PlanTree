@@ -1,0 +1,8 @@
+name = "plantree-worker"
+main = "src/index.js"
+compatibility_date = "2026-08-26"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "plantree-db"
+database_id = "local-placeholder-id"

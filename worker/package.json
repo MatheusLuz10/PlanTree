@@ -1,0 +1,14 @@
+{
+  "name": "plantree-worker",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:apply-local": "wrangler d1 execute plantree-db --local --file=./schema.sql",
+    "db:apply-remote": "wrangler d1 execute plantree-db --remote --file=./schema.sql"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}

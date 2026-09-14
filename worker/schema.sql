@@ -9,6 +9,7 @@ create table if not exists projects (
   id text primary key,
   name text not null,
   description text not null default '',
+  notes text not null default '',
   status text not null default 'pending'
     check (status in ('pending', 'in_progress', 'completed')),
   created_at text not null,
@@ -23,6 +24,7 @@ create table if not exists nodes (
   parent_id text references nodes (id),
   title text not null,
   description text not null default '',
+  notes text not null default '',
   type text not null check (type in ('folder', 'task')),
   status text not null default 'pending'
     check (status in ('pending', 'in_progress', 'completed')),

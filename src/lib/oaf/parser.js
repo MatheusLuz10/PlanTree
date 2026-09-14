@@ -5,17 +5,20 @@
 // ATIVIDADE. Mapeamento para os tipos existentes da árvore (sem mudar o
 // schema): ETAPA e ATIVIDADE viram type "folder", SUBTAREFA vira "task".
 //
-// Extensão: uma linha DESCRICAO: não vira nó da árvore — ela preenche o
-// campo `description` (já existente em todo node) do último elemento
-// declarado, seja PROJETO, ETAPA, ATIVIDADE ou SUBTAREFA. Várias linhas
-// DESCRICAO seguidas para o mesmo elemento se acumulam como parágrafos.
+// Extensão: linhas DESCRICAO: e OBSERVACAO: não viram nó da árvore — elas
+// preenchem, respectivamente, os campos `description` e `notes` (já
+// existentes em todo node) do último elemento declarado, seja PROJETO,
+// ETAPA, ATIVIDADE ou SUBTAREFA. Linhas repetidas do mesmo campo para o
+// mesmo elemento se acumulam como parágrafos.
 //
 // Uma estrutura inválida nunca é importada parcialmente: se houver qualquer
 // erro, `project` volta null e `errors` lista todas as linhas com problema.
 
 import { createNode } from '../../utils/treeUtils'
 
-const LINE_PATTERN = /^(PROJETO|ETAPA|ATIVIDADE|SUBTAREFA|DESCRICAO):\s*(.*)$/
+const LINE_PATTERN = /^(PROJETO|ETAPA|ATIVIDADE|SUBTAREFA|DESCRICAO|OBSERVACAO):\s*(.*)$/
+
+const FIELD_BY_KEYWORD = { DESCRICAO: 'description', OBSERVACAO: 'notes' }
 
 export function parseOAF(text) {
   const errors = []
@@ -35,7 +38,7 @@ export function parseOAF(text) {
     if (!match) {
       errors.push({
         line: lineNumber,
-        message: `Linha ${lineNumber}: formato não reconhecido ("${line}"). Esperado PROJETO/ETAPA/ATIVIDADE/SUBTAREFA/DESCRICAO seguido de ":" e um texto.`,
+        message: `Linha ${lineNumber}: formato não reconhecido ("${line}"). Esperado PROJETO/ETAPA/ATIVIDADE/SUBTAREFA/DESCRICAO/OBSERVACAO seguido de ":" e um texto.`,
       })
       return
     }
@@ -43,20 +46,21 @@ export function parseOAF(text) {
     const [, keyword, rawName] = match
     const name = rawName.trim()
     if (!name) {
-      const noun = keyword === 'DESCRICAO' ? 'sem conteúdo' : 'sem nome'
+      const noun = FIELD_BY_KEYWORD[keyword] ? 'sem conteúdo' : 'sem nome'
       errors.push({ line: lineNumber, message: `Linha ${lineNumber}: ${keyword} ${noun} depois dos dois-pontos.` })
       return
     }
 
-    if (keyword === 'DESCRICAO') {
+    const field = FIELD_BY_KEYWORD[keyword]
+    if (field) {
       if (!lastNode) {
         errors.push({
           line: lineNumber,
-          message: `Linha ${lineNumber}: DESCRICAO encontrada antes de qualquer PROJETO/ETAPA/ATIVIDADE/SUBTAREFA.`,
+          message: `Linha ${lineNumber}: ${keyword} encontrada antes de qualquer PROJETO/ETAPA/ATIVIDADE/SUBTAREFA.`,
         })
         return
       }
-      lastNode.description = lastNode.description ? `${lastNode.description}\n${name}` : name
+      lastNode[field] = lastNode[field] ? `${lastNode[field]}\n${name}` : name
       return
     }
 

@@ -55,15 +55,16 @@ async function createProject(env, request) {
     id: body.id,
     name: body.name,
     description: body.description ?? '',
+    notes: body.notes ?? '',
     status: body.status ?? 'pending',
     created_at: now,
     updated_at: now,
   }
 
   await env.DB.prepare(
-    'INSERT INTO projects (id, name, description, status, created_at, updated_at) VALUES (?,?,?,?,?,?)',
+    'INSERT INTO projects (id, name, description, notes, status, created_at, updated_at) VALUES (?,?,?,?,?,?,?)',
   )
-    .bind(row.id, row.name, row.description, row.status, row.created_at, row.updated_at)
+    .bind(row.id, row.name, row.description, row.notes, row.status, row.created_at, row.updated_at)
     .run()
 
   return json(request, row, 201)
@@ -80,6 +81,7 @@ async function seedProject(env, request) {
     id: body.project.id,
     name: body.project.name,
     description: body.project.description ?? '',
+    notes: body.project.notes ?? '',
     status: body.project.status ?? 'pending',
     created_at: now,
     updated_at: now,
@@ -87,20 +89,29 @@ async function seedProject(env, request) {
 
   const statements = [
     env.DB.prepare(
-      'INSERT INTO projects (id, name, description, status, created_at, updated_at) VALUES (?,?,?,?,?,?)',
-    ).bind(project.id, project.name, project.description, project.status, project.created_at, project.updated_at),
+      'INSERT INTO projects (id, name, description, notes, status, created_at, updated_at) VALUES (?,?,?,?,?,?,?)',
+    ).bind(
+      project.id,
+      project.name,
+      project.description,
+      project.notes,
+      project.status,
+      project.created_at,
+      project.updated_at,
+    ),
   ]
 
   for (const node of body.nodes ?? []) {
     statements.push(
       env.DB.prepare(
-        'INSERT INTO nodes (id, project_id, parent_id, title, description, type, status, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?)',
+        'INSERT INTO nodes (id, project_id, parent_id, title, description, notes, type, status, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?)',
       ).bind(
         node.id,
         project.id,
         node.parent_id ?? null,
         node.title,
         node.description ?? '',
+        node.notes ?? '',
         node.type,
         node.status ?? 'pending',
         now,
@@ -125,6 +136,10 @@ async function updateProject(env, request, id) {
   if (body.description !== undefined) {
     fields.push('description = ?')
     values.push(body.description)
+  }
+  if (body.notes !== undefined) {
+    fields.push('notes = ?')
+    values.push(body.notes)
   }
   if (body.status !== undefined) {
     fields.push('status = ?')
@@ -178,6 +193,7 @@ async function createNode(env, request) {
     parent_id: body.parent_id ?? null,
     title: body.title,
     description: body.description ?? '',
+    notes: body.notes ?? '',
     type: body.type,
     status: body.status ?? 'pending',
     created_at: now,
@@ -185,7 +201,7 @@ async function createNode(env, request) {
   }
 
   await env.DB.prepare(
-    'INSERT INTO nodes (id, project_id, parent_id, title, description, type, status, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?)',
+    'INSERT INTO nodes (id, project_id, parent_id, title, description, notes, type, status, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?)',
   )
     .bind(
       row.id,
@@ -193,6 +209,7 @@ async function createNode(env, request) {
       row.parent_id,
       row.title,
       row.description,
+      row.notes,
       row.type,
       row.status,
       row.created_at,
@@ -217,7 +234,7 @@ async function updateNode(env, request, id) {
 
   const fields = []
   const values = []
-  for (const key of ['title', 'description', 'status', 'parent_id']) {
+  for (const key of ['title', 'description', 'notes', 'status', 'parent_id']) {
     if (body[key] !== undefined) {
       fields.push(`${key} = ?`)
       values.push(body[key])

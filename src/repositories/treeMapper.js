@@ -20,6 +20,7 @@ export function rowToNode(row, projectId, children = []) {
     parentId: row.parent_id ?? projectId,
     title: row.title,
     description: row.description ?? '',
+    notes: row.notes ?? '',
     type: row.type,
     status: row.status,
     children,
@@ -51,6 +52,7 @@ export function buildProjectTree(projectRow, nodeRows) {
     parentId: null,
     title: projectRow.name,
     description: projectRow.description ?? '',
+    notes: projectRow.notes ?? '',
     type: 'project',
     status: projectRow.status,
     children: topLevel.map(buildSubtree),
@@ -70,6 +72,7 @@ export function projectToRow(project) {
     id: project.id,
     name: project.title,
     description: project.description ?? '',
+    notes: project.notes ?? '',
     status: project.status,
   }
 }
@@ -81,6 +84,7 @@ export function nodeToRow(node, projectId) {
     parent_id: resolveDbParentId(node.parentId, projectId),
     title: node.title,
     description: node.description ?? '',
+    notes: node.notes ?? '',
     type: node.type,
     status: node.status,
   }

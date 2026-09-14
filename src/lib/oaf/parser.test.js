@@ -165,4 +165,30 @@ SUBTAREFA: S2
       expect(errors[0].message).toMatch(/sem conteúdo/)
     })
   })
+
+  describe('OBSERVACAO', () => {
+    it('preenche a notes do último elemento, independente da DESCRICAO', () => {
+      const { project, errors } = parseOAF('PROJETO: P\nDESCRICAO: Desc\nOBSERVACAO: Nota')
+      expect(errors).toEqual([])
+      expect(project.description).toBe('Desc')
+      expect(project.notes).toBe('Nota')
+    })
+
+    it('acumula múltiplas linhas OBSERVACAO seguidas como parágrafos', () => {
+      const { project, errors } = parseOAF('PROJETO: P\nOBSERVACAO: Linha 1\nOBSERVACAO: Linha 2')
+      expect(errors).toEqual([])
+      expect(project.notes).toBe('Linha 1\nLinha 2')
+    })
+
+    it('rejeita OBSERVACAO antes de qualquer elemento', () => {
+      const { errors } = parseOAF('OBSERVACAO: Sozinha')
+      expect(errors[0].message).toMatch(/OBSERVACAO encontrada antes de qualquer/)
+      expect(errors[0].line).toBe(1)
+    })
+
+    it('rejeita OBSERVACAO sem conteúdo', () => {
+      const { errors } = parseOAF('PROJETO: P\nOBSERVACAO:')
+      expect(errors[0].message).toMatch(/sem conteúdo/)
+    })
+  })
 })

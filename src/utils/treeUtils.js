@@ -32,6 +32,7 @@ export function makeId(prefix = 'node') {
 export function createNode({
   title = 'Novo item',
   description = '',
+  notes = '',
   type = 'task',
   status = 'pending',
   parentId = null,
@@ -43,6 +44,7 @@ export function createNode({
     parentId,
     title,
     description,
+    notes,
     type,
     status,
     children: [],

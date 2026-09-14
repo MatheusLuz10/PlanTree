@@ -29,10 +29,10 @@ ATIVIDADE: Nome da atividade
 SUBTAREFA: Nome da subtarefa
 
 Regras:
-- Cada linha começa com PROJETO:, ETAPA:, ATIVIDADE:, SUBTAREFA: ou DESCRICAO:, seguido do texto.
+- Cada linha começa com PROJETO:, ETAPA:, ATIVIDADE:, SUBTAREFA:, DESCRICAO: ou OBSERVACAO:, seguido do texto.
 - Só pode haver um PROJETO, e ele vem primeiro.
 - Pode haver várias ETAPAS; cada ETAPA pode ter várias ATIVIDADES; cada ATIVIDADE pode ter várias SUBTAREFAS.
-- DESCRICAO: é opcional e sempre vem logo depois de um PROJETO, ETAPA, ATIVIDADE ou SUBTAREFA — ela vira o campo de descrição desse item, não um item novo.
+- DESCRICAO: e OBSERVACAO: são opcionais e sempre vêm logo depois de um PROJETO, ETAPA, ATIVIDADE ou SUBTAREFA — elas viram campos desse item (descrição e observações), não itens novos.
 - Não use markdown, numeração, marcadores (-, *) nem nenhum texto fora desse formato.
 
 Aqui está o que eu quero organizar: [descreva seu projeto aqui]`

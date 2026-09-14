@@ -3,9 +3,11 @@ import { STATUS_META, getNodeIcon, getNodeTypeLabel } from '../utils/treeUtils'
 
 function NodeDetailsPanel({ node, isOpen, onClose, onUpdate, onDelete, onAddChild, onMove, onDuplicate }) {
   const [draftTitle, setDraftTitle] = useState('')
+  const [showNotes, setShowNotes] = useState(false)
 
   useEffect(() => {
     if (node) setDraftTitle(node.title)
+    setShowNotes(false)
   }, [node])
 
   if (!isOpen || !node) return null
@@ -95,6 +97,27 @@ function NodeDetailsPanel({ node, isOpen, onClose, onUpdate, onDelete, onAddChil
               placeholder="Sem descrição"
             />
           </label>
+
+          <div className="collapsible-field">
+            <button
+              type="button"
+              className="collapsible-toggle"
+              onClick={() => setShowNotes((current) => !current)}
+              aria-expanded={showNotes}
+            >
+              {showNotes ? '▾' : '▸'} Observações{!showNotes && node.notes ? ' •' : ''}
+            </button>
+
+            {showNotes && (
+              <textarea
+                rows="4"
+                value={node.notes}
+                onChange={(event) => handleChange('notes', event.target.value)}
+                placeholder="Sem observações"
+                aria-label="Observações"
+              />
+            )}
+          </div>
 
           <label>
             Status

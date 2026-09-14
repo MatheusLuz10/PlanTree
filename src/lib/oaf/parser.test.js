@@ -121,4 +121,48 @@ ATIVIDADE: A3
     expect(errors).toEqual([])
     expect(project.children).toHaveLength(1)
   })
+
+  describe('DESCRICAO', () => {
+    it('preenche a description do último elemento, sem virar nó da árvore', () => {
+      const text = `
+PROJETO: P
+DESCRICAO: Descrição do projeto
+ETAPA: E
+DESCRICAO: Descrição da etapa
+ATIVIDADE: A
+SUBTAREFA: S1
+DESCRICAO: Descrição da subtarefa 1
+SUBTAREFA: S2
+`
+      const { project, errors } = parseOAF(text)
+      expect(errors).toEqual([])
+      expect(project.description).toBe('Descrição do projeto')
+
+      const etapa = project.children[0]
+      expect(etapa.description).toBe('Descrição da etapa')
+      expect(etapa.children).toHaveLength(1) // DESCRICAO não virou node
+
+      const atividade = etapa.children[0]
+      expect(atividade.children.map((s) => s.title)).toEqual(['S1', 'S2'])
+      expect(atividade.children[0].description).toBe('Descrição da subtarefa 1')
+      expect(atividade.children[1].description).toBe('')
+    })
+
+    it('acumula múltiplas linhas DESCRICAO seguidas como parágrafos', () => {
+      const { project, errors } = parseOAF('PROJETO: P\nDESCRICAO: Linha 1\nDESCRICAO: Linha 2')
+      expect(errors).toEqual([])
+      expect(project.description).toBe('Linha 1\nLinha 2')
+    })
+
+    it('rejeita DESCRICAO antes de qualquer elemento', () => {
+      const { errors } = parseOAF('DESCRICAO: Sozinha')
+      expect(errors[0].message).toMatch(/DESCRICAO encontrada antes de qualquer/)
+      expect(errors[0].line).toBe(1)
+    })
+
+    it('rejeita DESCRICAO sem conteúdo', () => {
+      const { errors } = parseOAF('PROJETO: P\nDESCRICAO:')
+      expect(errors[0].message).toMatch(/sem conteúdo/)
+    })
+  })
 })

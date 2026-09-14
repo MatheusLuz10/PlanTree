@@ -7,6 +7,7 @@ ETAPA: Planejamento
 
 ATIVIDADE: Definir escopo
 SUBTAREFA: Listar objetivos
+DESCRICAO: Levantar tudo que precisa ficar pronto antes de começar.
 SUBTAREFA: Levantar riscos`
 
 // Prompt pronto para colar no ChatGPT/Claude: explica o padrão OAF e pede a
@@ -19,6 +20,7 @@ ETAPA: Nome da etapa
 
 ATIVIDADE: Nome da atividade
 SUBTAREFA: Nome da subtarefa
+DESCRICAO: Resumo opcional do que essa subtarefa envolve.
 SUBTAREFA: Nome da subtarefa
 
 ETAPA: Nome da próxima etapa
@@ -27,9 +29,10 @@ ATIVIDADE: Nome da atividade
 SUBTAREFA: Nome da subtarefa
 
 Regras:
-- Cada linha começa com PROJETO:, ETAPA:, ATIVIDADE: ou SUBTAREFA:, seguido do nome.
+- Cada linha começa com PROJETO:, ETAPA:, ATIVIDADE:, SUBTAREFA: ou DESCRICAO:, seguido do texto.
 - Só pode haver um PROJETO, e ele vem primeiro.
 - Pode haver várias ETAPAS; cada ETAPA pode ter várias ATIVIDADES; cada ATIVIDADE pode ter várias SUBTAREFAS.
+- DESCRICAO: é opcional e sempre vem logo depois de um PROJETO, ETAPA, ATIVIDADE ou SUBTAREFA — ela vira o campo de descrição desse item, não um item novo.
 - Não use markdown, numeração, marcadores (-, *) nem nenhum texto fora desse formato.
 
 Aqui está o que eu quero organizar: [descreva seu projeto aqui]`

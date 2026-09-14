@@ -5,12 +5,17 @@
 // ATIVIDADE. Mapeamento para os tipos existentes da árvore (sem mudar o
 // schema): ETAPA e ATIVIDADE viram type "folder", SUBTAREFA vira "task".
 //
+// Extensão: uma linha DESCRICAO: não vira nó da árvore — ela preenche o
+// campo `description` (já existente em todo node) do último elemento
+// declarado, seja PROJETO, ETAPA, ATIVIDADE ou SUBTAREFA. Várias linhas
+// DESCRICAO seguidas para o mesmo elemento se acumulam como parágrafos.
+//
 // Uma estrutura inválida nunca é importada parcialmente: se houver qualquer
 // erro, `project` volta null e `errors` lista todas as linhas com problema.
 
 import { createNode } from '../../utils/treeUtils'
 
-const LINE_PATTERN = /^(PROJETO|ETAPA|ATIVIDADE|SUBTAREFA):\s*(.*)$/
+const LINE_PATTERN = /^(PROJETO|ETAPA|ATIVIDADE|SUBTAREFA|DESCRICAO):\s*(.*)$/
 
 export function parseOAF(text) {
   const errors = []
@@ -19,6 +24,7 @@ export function parseOAF(text) {
   let project = null
   let currentEtapa = null
   let currentAtividade = null
+  let lastNode = null
 
   lines.forEach((rawLine, index) => {
     const lineNumber = index + 1
@@ -29,7 +35,7 @@ export function parseOAF(text) {
     if (!match) {
       errors.push({
         line: lineNumber,
-        message: `Linha ${lineNumber}: formato não reconhecido ("${line}"). Esperado PROJETO/ETAPA/ATIVIDADE/SUBTAREFA seguido de ":" e um nome.`,
+        message: `Linha ${lineNumber}: formato não reconhecido ("${line}"). Esperado PROJETO/ETAPA/ATIVIDADE/SUBTAREFA/DESCRICAO seguido de ":" e um texto.`,
       })
       return
     }
@@ -37,7 +43,20 @@ export function parseOAF(text) {
     const [, keyword, rawName] = match
     const name = rawName.trim()
     if (!name) {
-      errors.push({ line: lineNumber, message: `Linha ${lineNumber}: ${keyword} sem nome depois dos dois-pontos.` })
+      const noun = keyword === 'DESCRICAO' ? 'sem conteúdo' : 'sem nome'
+      errors.push({ line: lineNumber, message: `Linha ${lineNumber}: ${keyword} ${noun} depois dos dois-pontos.` })
+      return
+    }
+
+    if (keyword === 'DESCRICAO') {
+      if (!lastNode) {
+        errors.push({
+          line: lineNumber,
+          message: `Linha ${lineNumber}: DESCRICAO encontrada antes de qualquer PROJETO/ETAPA/ATIVIDADE/SUBTAREFA.`,
+        })
+        return
+      }
+      lastNode.description = lastNode.description ? `${lastNode.description}\n${name}` : name
       return
     }
 
@@ -52,6 +71,7 @@ export function parseOAF(text) {
       project = createNode({ title: name, type: 'project', parentId: null })
       currentEtapa = null
       currentAtividade = null
+      lastNode = project
       return
     }
 
@@ -64,6 +84,7 @@ export function parseOAF(text) {
       project.children.push(etapa)
       currentEtapa = etapa
       currentAtividade = null
+      lastNode = etapa
       return
     }
 
@@ -75,6 +96,7 @@ export function parseOAF(text) {
       const atividade = createNode({ title: name, type: 'folder', parentId: currentEtapa.id })
       currentEtapa.children.push(atividade)
       currentAtividade = atividade
+      lastNode = atividade
       return
     }
 
@@ -85,6 +107,7 @@ export function parseOAF(text) {
     }
     const subtarefa = createNode({ title: name, type: 'task', parentId: currentAtividade.id })
     currentAtividade.children.push(subtarefa)
+    lastNode = subtarefa
   })
 
   if (!project && errors.length === 0) {

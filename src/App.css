@@ -991,6 +991,41 @@
   margin-top: 4px;
 }
 
+.oaf-example-toggle {
+  margin-bottom: 12px;
+}
+
+.oaf-example {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: rgba(148, 163, 184, 0.08);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 14px;
+}
+
+.oaf-example p {
+  margin: 0;
+  color: #b6c7ea;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.oaf-example pre {
+  margin: 0;
+  padding: 10px 12px;
+  background: rgba(2, 6, 23, 0.6);
+  border-radius: 10px;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
 .empty-state {
   color: #b6c7ea;
   text-align: center;

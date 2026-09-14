@@ -6,3 +6,9 @@ compatibility_date = "2026-08-26"
 binding = "DB"
 database_name = "plantree-db"
 database_id = "f808259d-f205-4244-bcbe-33003c08609e"
+
+[assets]
+directory = "../dist"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+run_worker_first = ["/api/*"]

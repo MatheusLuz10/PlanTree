@@ -318,6 +318,12 @@
   flex: 1 1 auto;
 }
 
+.home-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .node-title mark {
   background: rgba(250, 204, 21, 0.45);
   color: inherit;

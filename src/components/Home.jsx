@@ -60,7 +60,7 @@ function Home({ projects, onOpenProject, onCreateProject, onCreateExampleProject
         ))}
       </div>
 
-      <div className="details-actions">
+      <div className="home-actions">
         <button type="button" className="primary-button home-new-project" onClick={onCreateProject}>
           + Novo projeto
         </button>

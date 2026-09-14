@@ -5,4 +5,4 @@ compatibility_date = "2026-08-26"
 [[d1_databases]]
 binding = "DB"
 database_name = "plantree-db"
-database_id = "local-placeholder-id"
+database_id = "f808259d-f205-4244-bcbe-33003c08609e"

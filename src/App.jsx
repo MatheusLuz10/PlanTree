@@ -4,6 +4,7 @@ import BottomNavigation from './components/BottomNavigation'
 import CreateNodeModal from './components/CreateNodeModal'
 import Dashboard from './components/Dashboard'
 import Home from './components/Home'
+import ImportOafModal from './components/ImportOafModal'
 import MoveNodeModal from './components/MoveNodeModal'
 import NodeDetailsPanel from './components/NodeDetailsPanel'
 import TreeNode from './components/TreeNode'
@@ -74,6 +75,7 @@ function TreeApp() {
     targetNode: null,
   })
   const [moveState, setMoveState] = useState({ isOpen: false, node: null })
+  const [isOafImportOpen, setIsOafImportOpen] = useState(false)
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
   const [activeTab, setActiveTab] = useState('home')
 
@@ -139,6 +141,19 @@ function TreeApp() {
     setActiveTab('tree')
 
     await persist([...projects, example], () => seedProjectWithNodes(example, descendantRows))
+  }
+
+  // `project` já vem validado e montado pelo parseOAF (src/lib/oaf/parser.js) — aqui só persistimos,
+  // no mesmo formato atômico usado pelo projeto de exemplo.
+  const handleImportOaf = async (project) => {
+    const descendantRows = flattenNodes(project).slice(1)
+
+    setIsOafImportOpen(false)
+    setSelectedProjectId(project.id)
+    setSelectedNodeId(project.id)
+    setActiveTab('tree')
+
+    await persist([...projects, project], () => seedProjectWithNodes(project, descendantRows))
   }
 
   const handleCreateNode = async ({ title, description, type, status, parentId }) => {
@@ -407,6 +422,7 @@ function TreeApp() {
             onOpenProject={handleOpenProjectFromHome}
             onCreateProject={openProjectModal}
             onCreateExampleProject={handleCreateExampleProject}
+            onImportOaf={() => setIsOafImportOpen(true)}
           />
         </main>
       ) : activeTab === 'tree' ? (
@@ -482,6 +498,12 @@ function TreeApp() {
         targetNode={modalState.targetNode}
         onClose={closeModal}
         onSubmit={modalState.mode === 'project' ? handleCreateProject : handleCreateNode}
+      />
+
+      <ImportOafModal
+        isOpen={isOafImportOpen}
+        onClose={() => setIsOafImportOpen(false)}
+        onImport={handleImportOaf}
       />
 
       <MoveNodeModal

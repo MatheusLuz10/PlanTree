@@ -9,7 +9,7 @@ function ProgressBar({ percentage }) {
   )
 }
 
-function Home({ projects, onOpenProject, onCreateProject, onCreateExampleProject }) {
+function Home({ projects, onOpenProject, onCreateProject, onCreateExampleProject, onImportOaf }) {
   const overview = useMemo(() => getProjectsOverview(projects), [projects])
 
   if (projects.length === 0) {
@@ -25,6 +25,9 @@ function Home({ projects, onOpenProject, onCreateProject, onCreateExampleProject
             </button>
             <button type="button" className="secondary-button" onClick={onCreateExampleProject}>
               + Criar projeto de exemplo
+            </button>
+            <button type="button" className="secondary-button" onClick={onImportOaf}>
+              + Importar (OAF)
             </button>
           </div>
         </div>
@@ -57,9 +60,14 @@ function Home({ projects, onOpenProject, onCreateProject, onCreateExampleProject
         ))}
       </div>
 
-      <button type="button" className="primary-button home-new-project" onClick={onCreateProject}>
-        + Novo projeto
-      </button>
+      <div className="details-actions">
+        <button type="button" className="primary-button home-new-project" onClick={onCreateProject}>
+          + Novo projeto
+        </button>
+        <button type="button" className="secondary-button" onClick={onImportOaf}>
+          + Importar (OAF)
+        </button>
+      </div>
     </section>
   )
 }

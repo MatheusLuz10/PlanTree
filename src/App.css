@@ -229,9 +229,11 @@
 }
 
 .node-text {
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .node-title {
@@ -787,9 +789,11 @@
 }
 
 .activity-text {
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .tree-node-progress {
@@ -1181,9 +1185,7 @@
 
   .topbar h1 {
     max-width: calc(100vw - 72px);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    overflow-wrap: anywhere;
   }
 
   .project-card-grid {

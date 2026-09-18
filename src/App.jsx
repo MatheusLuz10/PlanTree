@@ -153,6 +153,7 @@ function TreeApp() {
     setIsOafImportOpen(false)
     setSelectedProjectId(project.id)
     setSelectedNodeId(project.id)
+    setExpandedMap((current) => ({ ...current, [project.id]: false }))
     setActiveTab('tree')
 
     await persist([...projects, project], () => seedProjectWithNodes(project, descendantRows))
@@ -185,7 +186,7 @@ function TreeApp() {
   const handleToggleExpand = (nodeId) => {
     setExpandedMap((current) => ({
       ...current,
-      [nodeId]: !(current[nodeId] ?? true),
+      [nodeId]: !(current[nodeId] ?? false),
     }))
   }
 

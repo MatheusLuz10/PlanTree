@@ -52,6 +52,22 @@ function TreeNode({
           {hasChildren ? (isExpanded ? '▼' : '▶') : '•'}
         </button>
 
+        {node.type === 'task' && (
+          <button
+            type="button"
+            className={`task-complete-toggle ${node.status === 'completed' ? 'task-complete-toggle-done' : ''}`}
+            onClick={(event) => {
+              event.stopPropagation()
+              onToggleComplete(node.id)
+            }}
+            aria-label={node.status === 'completed' ? `Reabrir ${node.title}` : `Concluir ${node.title}`}
+            aria-pressed={node.status === 'completed'}
+            title={node.status === 'completed' ? 'Reabrir atividade' : 'Marcar como concluída'}
+          >
+            {node.status === 'completed' ? '✓' : ''}
+          </button>
+        )}
+
         <button
           type="button"
           className="tree-node-main"
@@ -61,21 +77,7 @@ function TreeNode({
             {getNodeIcon(node.type)}
           </span>
 
-          {node.type === 'task' ? (
-            <button
-              type="button"
-              className={`task-complete-toggle ${node.status === 'completed' ? 'task-complete-toggle-done' : ''}`}
-              onClick={(event) => {
-                event.stopPropagation()
-                onToggleComplete(node.id)
-              }}
-              aria-label={node.status === 'completed' ? `Reabrir ${node.title}` : `Concluir ${node.title}`}
-              aria-pressed={node.status === 'completed'}
-              title={node.status === 'completed' ? 'Reabrir atividade' : 'Marcar como concluída'}
-            >
-              {node.status === 'completed' ? '✓' : ''}
-            </button>
-          ) : (
+          {node.type !== 'task' && (
             <span className={`status-indicator ${STATUS_META[node.status]?.className ?? 'status-pending'}`}>
               {STATUS_META[node.status]?.icon ?? '○'}
             </span>

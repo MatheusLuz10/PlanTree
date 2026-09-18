@@ -206,6 +206,15 @@ function TreeApp() {
     )
   }
 
+  const handleToggleComplete = async (nodeId) => {
+    if (!selectedProject) return
+
+    const target = findNodeById(selectedProject, nodeId)
+    if (!target || target.type !== 'task') return
+
+    await handleUpdateNode(nodeId, { status: target.status === 'completed' ? 'pending' : 'completed' })
+  }
+
   // Retorna true se a exclusão realmente aconteceu (false se cancelada ou
   // inválida) — usado para só fechar o popup de detalhes quando faz sentido.
   const handleDeleteNode = async (nodeId) => {
@@ -464,6 +473,7 @@ function TreeApp() {
                   node={filteredProject}
                   expandedMap={expandedMap}
                   onToggleExpand={handleToggleExpand}
+                  onToggleComplete={handleToggleComplete}
                   onSelectNode={(node) => {
                     setSelectedNodeId(node.id)
                     setIsDetailsOpen(true)

@@ -23,12 +23,13 @@ function TreeNode({
   level = 0,
   expandedMap,
   onToggleExpand,
+  onToggleComplete,
   onSelectNode,
   selectedId,
   searchTerm = '',
 }) {
   const forceExpand = Boolean(searchTerm)
-  const isExpanded = forceExpand || (expandedMap[node.id] ?? true)
+  const isExpanded = forceExpand || (expandedMap[node.id] ?? false)
   const hasChildren = node.children.length > 0
   const isSelected = selectedId === node.id
 
@@ -60,9 +61,25 @@ function TreeNode({
             {getNodeIcon(node.type)}
           </span>
 
-          <span className={`status-indicator ${STATUS_META[node.status]?.className ?? 'status-pending'}`}>
-            {STATUS_META[node.status]?.icon ?? '○'}
-          </span>
+          {node.type === 'task' ? (
+            <button
+              type="button"
+              className={`task-complete-toggle ${node.status === 'completed' ? 'task-complete-toggle-done' : ''}`}
+              onClick={(event) => {
+                event.stopPropagation()
+                onToggleComplete(node.id)
+              }}
+              aria-label={node.status === 'completed' ? `Reabrir ${node.title}` : `Concluir ${node.title}`}
+              aria-pressed={node.status === 'completed'}
+              title={node.status === 'completed' ? 'Reabrir atividade' : 'Marcar como concluída'}
+            >
+              {node.status === 'completed' ? '✓' : ''}
+            </button>
+          ) : (
+            <span className={`status-indicator ${STATUS_META[node.status]?.className ?? 'status-pending'}`}>
+              {STATUS_META[node.status]?.icon ?? '○'}
+            </span>
+          )}
 
           <span className="node-text">
             <span className="node-title">{highlightTitle(node.title, searchTerm)}</span>
@@ -92,6 +109,7 @@ function TreeNode({
               level={level + 1}
               expandedMap={expandedMap}
               onToggleExpand={onToggleExpand}
+              onToggleComplete={onToggleComplete}
               onSelectNode={onSelectNode}
               selectedId={selectedId}
               searchTerm={searchTerm}

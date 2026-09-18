@@ -24,6 +24,7 @@ export async function updateProjectRow(projectId, updates) {
   if (updates.title !== undefined) payload.name = updates.title
   if (updates.description !== undefined) payload.description = updates.description
   if (updates.notes !== undefined) payload.notes = updates.notes
+  if (updates.conteudo !== undefined) payload.conteudo = updates.conteudo
   if (updates.status !== undefined) payload.status = updates.status
 
   return api.patch(`/api/projects/${projectId}`, payload)

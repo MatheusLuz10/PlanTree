@@ -3,11 +3,13 @@ import { parseOAF } from '../lib/oaf/parser'
 
 const PLACEHOLDER = `PROJETO: Meu Projeto
 
-ETAPA: Planejamento
+ATIVIDADE: Planejamento
 
-ATIVIDADE: Definir escopo
+TAREFA: Definir escopo
 SUBTAREFA: Listar objetivos
 DESCRICAO: Levantar tudo que precisa ficar pronto antes de começar.
+SUBSUBTAREFA: Escrever a lista de objetivos
+CONTEUDO: Ler o briefing e anotar cada objetivo em um tópico.
 SUBTAREFA: Levantar riscos`
 
 // Prompt pronto para colar no ChatGPT/Claude: explica o padrão OAF e pede a
@@ -16,23 +18,26 @@ const OAF_PROMPT = `Gere a estrutura do meu projeto usando exatamente este forma
 
 PROJETO: Nome do projeto
 
-ETAPA: Nome da etapa
-
 ATIVIDADE: Nome da atividade
+
+TAREFA: Nome da tarefa
 SUBTAREFA: Nome da subtarefa
 DESCRICAO: Resumo opcional do que essa subtarefa envolve.
+SUBSUBTAREFA: Nome da subsubtarefa
+CONTEUDO: O que precisa ser estudado, aprendido, produzido ou executado aqui.
 SUBTAREFA: Nome da subtarefa
 
-ETAPA: Nome da próxima etapa
+ATIVIDADE: Nome da próxima atividade
 
-ATIVIDADE: Nome da atividade
+TAREFA: Nome da tarefa
 SUBTAREFA: Nome da subtarefa
 
 Regras:
-- Cada linha começa com PROJETO:, ETAPA:, ATIVIDADE:, SUBTAREFA:, DESCRICAO: ou OBSERVACAO:, seguido do texto.
+- Cada linha começa com PROJETO:, ATIVIDADE:, TAREFA:, SUBTAREFA:, SUBSUBTAREFA:, DESCRICAO:, OBSERVACAO: ou CONTEUDO:, seguido do texto.
 - Só pode haver um PROJETO, e ele vem primeiro.
-- Pode haver várias ETAPAS; cada ETAPA pode ter várias ATIVIDADES; cada ATIVIDADE pode ter várias SUBTAREFAS.
-- DESCRICAO: e OBSERVACAO: são opcionais e sempre vêm logo depois de um PROJETO, ETAPA, ATIVIDADE ou SUBTAREFA — elas viram campos desse item (descrição e observações), não itens novos.
+- Pode haver várias ATIVIDADES; cada ATIVIDADE pode ter várias TAREFAS; cada TAREFA pode ter várias SUBTAREFAS; cada SUBTAREFA pode ter várias SUBSUBTAREFAS.
+- São quatro níveis progressivos de detalhamento — use só a profundidade que o objetivo realmente precisa (um objetivo simples pode parar em TAREFA, um complexo pode chegar a SUBSUBTAREFA).
+- DESCRICAO:, OBSERVACAO: e CONTEUDO: são opcionais e sempre vêm logo depois de um PROJETO, ATIVIDADE, TAREFA, SUBTAREFA ou SUBSUBTAREFA — elas viram campos desse item (descrição, observações e conteúdo a estudar/produzir/executar), não itens novos.
 - Não use markdown, numeração, marcadores (-, *) nem nenhum texto fora desse formato.
 
 Aqui está o que eu quero organizar: [descreva seu projeto aqui]`

@@ -21,6 +21,7 @@ export function rowToNode(row, projectId, children = []) {
     title: row.title,
     description: row.description ?? '',
     notes: row.notes ?? '',
+    conteudo: row.conteudo ?? '',
     type: row.type,
     status: row.status,
     children,
@@ -53,6 +54,7 @@ export function buildProjectTree(projectRow, nodeRows) {
     title: projectRow.name,
     description: projectRow.description ?? '',
     notes: projectRow.notes ?? '',
+    conteudo: projectRow.conteudo ?? '',
     type: 'project',
     status: projectRow.status,
     children: topLevel.map(buildSubtree),
@@ -73,6 +75,7 @@ export function projectToRow(project) {
     name: project.title,
     description: project.description ?? '',
     notes: project.notes ?? '',
+    conteudo: project.conteudo ?? '',
     status: project.status,
   }
 }
@@ -85,6 +88,7 @@ export function nodeToRow(node, projectId) {
     title: node.title,
     description: node.description ?? '',
     notes: node.notes ?? '',
+    conteudo: node.conteudo ?? '',
     type: node.type,
     status: node.status,
   }

@@ -4,11 +4,13 @@ import { STATUS_META, getNodeIcon, getNodeTypeLabel } from '../utils/treeUtils'
 function NodeDetailsPanel({ node, isOpen, onClose, onUpdate, onDelete, onAddChild, onMove, onDuplicate }) {
   const [draftTitle, setDraftTitle] = useState('')
   const [showDescription, setShowDescription] = useState(false)
+  const [showConteudo, setShowConteudo] = useState(false)
   const [showNotes, setShowNotes] = useState(false)
 
   useEffect(() => {
     if (node) setDraftTitle(node.title)
     setShowDescription(false)
+    setShowConteudo(false)
     setShowNotes(false)
   }, [node])
 
@@ -107,6 +109,27 @@ function NodeDetailsPanel({ node, isOpen, onClose, onUpdate, onDelete, onAddChil
                 onChange={(event) => handleChange('description', event.target.value)}
                 placeholder="Sem descrição"
                 aria-label="Descrição"
+              />
+            )}
+          </div>
+
+          <div className="collapsible-field">
+            <button
+              type="button"
+              className="collapsible-toggle"
+              onClick={() => setShowConteudo((current) => !current)}
+              aria-expanded={showConteudo}
+            >
+              {showConteudo ? '▾' : '▸'} Conteúdo{!showConteudo && node.conteudo ? ' •' : ''}
+            </button>
+
+            {showConteudo && (
+              <textarea
+                rows="6"
+                value={node.conteudo}
+                onChange={(event) => handleChange('conteudo', event.target.value)}
+                placeholder="O que precisa ser estudado, aprendido, produzido ou executado aqui?"
+                aria-label="Conteúdo"
               />
             )}
           </div>

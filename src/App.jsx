@@ -127,6 +127,7 @@ function TreeApp() {
     closeModal()
     setSelectedProjectId(project.id)
     setSelectedNodeId(project.id)
+    setExpandedMap((current) => ({ ...current, [project.id]: false }))
     setActiveTab('tree')
 
     await persist([...projects, project], () => createProjectRow(project))
@@ -138,6 +139,7 @@ function TreeApp() {
 
     setSelectedProjectId(example.id)
     setSelectedNodeId(example.id)
+    setExpandedMap((current) => ({ ...current, [example.id]: false }))
     setActiveTab('tree')
 
     await persist([...projects, example], () => seedProjectWithNodes(example, descendantRows))
